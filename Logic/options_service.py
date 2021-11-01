@@ -1,53 +1,90 @@
 from copy import deepcopy
 
-from Domain.rezervare import Rezervare
-from Domain.update_operation import UpdateOperation
-from Logic import rezervare_service
-from Repository.file_repository import FileRepository
+from Domain.rezervare import creeazaRezervare, getId, getCheckin, getPret, getClasa, getNume
+from Logic.CRUD import update
 from Logic.undoredo_service import UndoRedoService
 
-class OptionsService:
-
-    def __init__(self,
-                 rezervare_repository: FileRepository,
-                 operatiuni_repository: FileRepository,
-                 undo_redo_service:UndoRedoService):
-
-        self.__rezervare_repository = rezervare_repository
-        self.__operatiuni_repository = operatiuni_repository
-        self.__undo_redo_service = undo_redo_service
 
 
-    def upgrade_clasa(self,rezervare,nume):
-        '''
-        se cauta schimba clasa
-        :param rezervare:
-        :param nume:
-        :return:
-        '''
-        lst=[rezervare.id_entity,rezervare.nume,rezervare.clasa,rezervare.pret,rezervare.checkin]
 
-        if str(lst[1]).find(nume) != -1:
-            if str(lst[2]).find('economy plus') != -1:
-                rezervare_new = Rezervare(lst[0], lst[1], 'business', lst[3], lst[4])
-                self.__undo_redo_service.add_to_undo(
-                    UpdateOperation(self.__rezervare_repository, rezervare, rezervare_new))
-                self.__undo_redo_service.clear_redo()
+def upgrade_clasa(rezervare,nume):
+    '''
+    se cauta schimba clasa
+    :param rezervare:
+    :param nume:
+    :return:
+    '''
+    lst=[getId(rezervare),getNume(rezervare),getClasa(rezervare),getPret(rezervare),getCheckin(rezervare)]
 
-                rezervare = deepcopy(rezervare_new)
-                self.__rezervare_repository.update(rezervare)
-                return self.__rezervare_repository.operatie2(rezervare)
+    if str(lst[1]).find(nume) != -1:
+        if str(lst[2]).find('economy plus') != -1:
+            rezervare_new = creeazaRezervare(lst[0], lst[1], 'business', lst[3], lst[4])
+            rezervare = deepcopy(rezervare_new)
+            update(getId(rezervare),getNume(rezervare),getClasa(rezervare),getPret(rezervare),getCheckin(rezervare))
+            return rezervare
 
-            elif str(lst[2]).find('economy') != -1:
-                rezervare_new=Rezervare(lst[0],lst[1],'economy plus',lst[3],lst[4])
+        elif str(lst[2]).find('economy') != -1:
+            rezervare_new=creeazaRezervare(lst[0],lst[1],'economy plus',lst[3],lst[4])
+            rezervare=deepcopy(rezervare_new)
+            update(getId(rezervare), getNume(rezervare), getClasa(rezervare), getPret(rezervare), getCheckin(rezervare))
+            return rezervare
 
-                self.__undo_redo_service.add_to_undo(
-                    UpdateOperation(self.__rezervare_repository, rezervare, rezervare_new))
-                self.__undo_redo_service.clear_redo()
+    return None
 
-                rezervare=deepcopy(rezervare_new)
-                self.__rezervare_repository.update(rezervare)
-                return self.__rezervare_repository.operatie2(rezervare)
+def ordonare_descrescator_dupa_pret(lista):
+    '''
+    sorteaza descrescator dupa pret rezervarile din lista
+    :param lista: lista cu rezervari
+    :return: lista ordonata dupa cerinta de mai sus
+    '''
+    return sorted(lista,key=lambda rezervare: getPret(rezervare),reverse=True)
 
+def pret_max_per_clasa(lista):
+    '''
+    determina pretul maxim pentru fiecare clasa
+    :param lisat: lista cu rezervari
+    :return: dictionar care are ca si chei cele trei tipuri de clase si ca si valori pretul maxim pentru fiecare clasa
+    '''
+    rezultat = {}
+    for rezervare in lista:
+        clasa = getClasa(rezervare)
+        pret = getPret(rezervare)
+        if clasa in rezultat:
+            if pret > rezultat[clasa]:
+                rezultat[clasa] = pret
+        else:
+            rezultat[clasa] = pret
+    return rezultat
 
-        return None
+def suma_pret_per_nume(lista):
+    '''
+    determina suma preturilor pentru fiecare nume din lista
+    :param lista: lista rezervarilor
+    :return: dictionar care are ca si chei numele persoanelor iar ca si valori are suma preturilor corespunzatoare numelor respective
+    '''
+    rezultat = {}
+    for rezervare in lista:
+        nume = getNume(rezervare)
+        pret = getPret(rezervare)
+        if nume in rezultat:
+            rezultat[nume] = rezultat[nume] + pret
+        else:
+            rezultat[nume] = pret
+    return rezultat
+
+def aplicare_reducere(lista,procent):
+    '''
+    ieftineste toate rezervarile la care s-a facut checkin-ul cu un procent dat
+    :param lista: lista cu rezervari
+    :param procent: procentul cu care se doreste ieftinirea
+    :return: lista care contine modificarile facute
+    '''
+    listaNoua=[]
+    for rezervare in lista:
+        if getCheckin(rezervare) == "da":
+            reducere=getPret(rezervare)-(procent/100*getPret(rezervare))
+            rezervareNoua=creeazaRezervare(getId(rezervare),reducere,getNume(rezervare),getClasa(rezervare),getCheckin(rezervare))
+            listaNoua.append(rezervareNoua)
+        else:
+            listaNoua.append(rezervare)
+        return listaNoua

@@ -1,52 +1,67 @@
-from Domain.entity import Entity
-
-class Rezervare(Entity):
+def creeazaRezervare(id,nume,clasa,pret,checkin):
     '''
-    Descrie o rezervare.
+    creeaza un dictionar ce reprezinta o rezervare
+    :param id: string
+    :param nume: string
+    :param clasa: string
+    :param pret: float
+    :param checkin: string
+    :return: un dictionar ce contine o rezervare
     '''
+    return {
+        "id": id,
+        "nume": nume,
+        "clasa": clasa,
+        "pret": pret,
+        "checkin": checkin
+    }
 
-    def __init__(self,id_rezervare,nume,clasa,pret,checkin):
-        super().__init__(id_rezervare)
-        self.__nume = nume
-        self.__clasa = clasa
-        self.__pret = pret
-        self.__checkin = checkin
+def getId(rezervare):
+    '''
+    da id-ul unei rezervari
+    :param rezervare: dictionar ce contine o rezervare
+    :return: id-ul rezervarii
+    '''
+    return rezervare["id"]
 
+def getNume(rezervare):
+    '''
+    da numele unei rezervari
+    :param rezervare:dictionar ce contine o rezervare
+    :return: numele rezervarii
+    '''
+    return rezervare["nume"]
 
+def getClasa(rezervare):
+    '''
+    da clasa unei rezervari
+    :param rezervare:dictionar ce contine o rezervare
+    :return: clasa rezervarii
+    '''
+    return rezervare["clasa"]
 
-    @property
-    def nume(self):
-        return self.__nume
+def getPret(rezervare):
+    '''
+    da pretul unei rezervari
+    :param rezervare: dictionar ce contine o rezervare
+    :return: pretul rezervarii
+    '''
+    return rezervare["pret"]
 
-    @nume.setter
-    def nume(self, value):
-        self.__nume = value
+def getCheckin(rezervare):
+    '''
+    da checkin-ul unei rezervari
+    :param rezervare:dictionar ce contine o rezervare
+    :return: checkin-ul rezervarii
+    '''
+    return rezervare["checkin"]
 
-    @property
-    def clasa(self):
-        return self.__clasa
+def toString(rezervare):
+    return "Id: {}, Nume: {}, Clasa: {}, Pret: {}, Checkin: {}".format(
+        getId(rezervare),
+        getNume(rezervare),
+        getClasa(rezervare),
+        getPret(rezervare),
+        getCheckin(rezervare)
+    )
 
-    @clasa.setter
-    def clasa(self, value):
-        self.__clasa = value
-
-    @property
-    def pret(self):
-        return self.__pret
-
-    @pret.setter
-    def pret(self, value):
-        self.__pret = value
-
-    @property
-    def checkin(self):
-        return self.__checkin
-
-    @checkin.setter
-    def checkin(self, value):
-        self.__checkin = value
-
-
-    def __str__(self):
-        return f'{self.id_entity} - nume:{self.nume}, clasa:{self.clasa}, ' \
-               f'pret:{self.pret}; checkin:{self.checkin}'

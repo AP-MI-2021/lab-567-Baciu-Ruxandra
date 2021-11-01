@@ -1,11 +1,11 @@
-from Domain.rezervare import Rezervare
+from Domain.rezervare import creeazaRezervare, getId, getNume, getClasa, getPret, getCheckin
 
 
 def test_rezervare():
-    r=Rezervare('1', 'Carmen', 'economy', 123, 'da')
+    r=creeazaRezervare('1', 'Carmen', 'economy', 123, 'da')
 
-    assert r.id_entity == '1'
-    assert r.nume == 'Carmen'
-    assert r.clasa == 'economy'
-    assert r.pret == 123
-    assert r.checkin == 'da'
+    assert getId(r) == '1'
+    assert getNume(r) == 'Carmen'
+    assert getClasa(r) == 'economy'
+    assert getPret(r) == 123
+    assert getCheckin(r) == 'da'

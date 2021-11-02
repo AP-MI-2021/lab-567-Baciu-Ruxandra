@@ -2,7 +2,6 @@ from Domain.rezervare import toString
 from Logic.CRUD import add, delete, update
 from Logic.options_service import upgrade_clasa, suma_pret_per_nume, ordonare_descrescator_dupa_pret, \
     pret_max_per_clasa, aplicare_reducere
-from Logic.undoredo_service import UndoRedoService
 
 
 
@@ -57,13 +56,17 @@ def run_crud_rezervare(lista):
             print('Optiune invalida.')
 
 def handle_create_rezervare(lista):
+    try:
         id_rezervare = input('ID-ul rezervarii: ')
         nume = input('Numele pe care a fost facuta rezervarea: ')
         clasa = input('Clasa: ')
         pret = float(input('Pretul rezervarii: '))
         checkin = input('A fost facut checkin-ul? (da/nu): ')
 
-        return add(id_rezervare, nume, clasa, pret, checkin,lista)
+        return add(id_rezervare, nume, clasa, pret, checkin, lista)
+
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
 
 
 def handle_show_all_rezervare(lista):
@@ -71,20 +74,25 @@ def handle_show_all_rezervare(lista):
         print(toString(rezervare))
 
 def handle_delete_rezervare(lista):
-    id_rezervare = input('ID-ul rezervarii pe care doriti sa o stergeti: ')
-    return delete(id_rezervare,lista)
+    try:
+        id_rezervare = input('ID-ul rezervarii pe care doriti sa o stergeti: ')
+        return delete(id_rezervare,lista)
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
 
 
 def handle_update_rezervare(lista):
+    try:
+        id_rezervare = input('ID-ul rezervarii pe care doriti sa o modificati: ')
+        nume = input('Numele pe care a fost facuta rezervarea:(lasati gol daca nu doriti sa il schimbati) ')
+        clasa = input('Clasa:(lasati gol daca nu doriti sa il schimbati) ')
+        pret = input('Pretul rezervarii:(introduceti -1 daca nu doriti sa il schimbati) ')
+        checkin = input('A fost facut checkin-ul? (da/nu):(lasati gol daca nu doriti sa il schimbati) ')
 
-    id_rezervare = input('ID-ul rezervarii pe care doriti sa o modificati: ')
-    nume = input('Numele pe care a fost facuta rezervarea:(lasati gol daca nu doriti sa il schimbati) ')
-    clasa = input('Clasa:(lasati gol daca nu doriti sa il schimbati) ')
-    pret = input('Pretul rezervarii:(introduceti -1 daca nu doriti sa il schimbati) ')
-    checkin = input('A fost facut checkin-ul? (da/nu):(lasati gol daca nu doriti sa il schimbati) ')
+        return update(id_rezervare, nume, clasa, pret, checkin,lista)
 
-    return update(id_rezervare, nume, clasa, pret, checkin,lista)
-
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
 
 def run_options(lista):
     while True:
@@ -126,13 +134,15 @@ def handle_clasa_sup(lista,nume):
 
 
 def handle_ieftinire(lista,procent):
-    handle_create_rezervare(aplicare_reducere(lista,procent))
-
+    try:
+        handle_create_rezervare(aplicare_reducere(lista,procent))
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
 
 def handle_pret_max_per_clasa(lista):
     rezultat = pret_max_per_clasa(lista)
-    for an in rezultat:
-        print("Anul {} are caloriile maxime {}".format(an, rezultat[an]))
+    for clasa in rezultat:
+        print("Clasa {} are preturl maxim {}".format(clasa, rezultat[clasa]))
 
 def handle_ordonare_descresc_rezervari(lista):
     handle_create_rezervare(ordonare_descrescator_dupa_pret(lista))
@@ -140,6 +150,6 @@ def handle_ordonare_descresc_rezervari(lista):
 def handle_sume_pret_per_nume(lista):
     rezultat = suma_pret_per_nume(lista)
     for nume in rezultat:
-        print("pe numele {}  sunt rezervari care in total au suma de {}".format(nume, rezultat[nume]))
+        print("Pe numele {}  sunt rezervari care in total au suma de {}".format(nume, rezultat[nume]))
 
 

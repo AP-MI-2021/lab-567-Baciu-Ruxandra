@@ -60,7 +60,8 @@ def suma_pret_per_nume(lista):
     '''
     determina suma preturilor pentru fiecare nume din lista
     :param lista: lista rezervarilor
-    :return: dictionar care are ca si chei numele persoanelor iar ca si valori are suma preturilor corespunzatoare numelor respective
+    :return: dictionar care are ca si chei numele persoanelor iar ca si valori are suma preturilor corespunzatoare
+     numelor respective
     '''
     rezultat = {}
     for rezervare in lista:
@@ -80,11 +81,14 @@ def aplicare_reducere(lista,procent):
     :return: lista care contine modificarile facute
     '''
     listaNoua=[]
+    if procent<0:
+        raise ValueError("Procentul trebuie sa fie mai mare decat 0!")
     for rezervare in lista:
         if getCheckin(rezervare) == "da":
-            reducere=getPret(rezervare)-(procent/100*getPret(rezervare))
-            rezervareNoua=creeazaRezervare(getId(rezervare),reducere,getNume(rezervare),getClasa(rezervare),getCheckin(rezervare))
+            reducere=getPret(rezervare)-((procent/100)*getPret(rezervare))
+            rezervareNoua=creeazaRezervare(getId(rezervare),getNume(rezervare),getClasa(rezervare),reducere,
+                                           getCheckin(rezervare))
             listaNoua.append(rezervareNoua)
         else:
             listaNoua.append(rezervare)
-        return listaNoua
+    return listaNoua

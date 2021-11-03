@@ -2,7 +2,6 @@ from copy import deepcopy
 
 from Domain.rezervare import creeazaRezervare, getId, getCheckin, getPret, getClasa, getNume
 from Logic.CRUD import update
-from Logic.undoredo_service import UndoRedoService
 
 
 

@@ -8,10 +8,59 @@ from Logic.options_service import upgrade_clasa, suma_pret_per_nume, ordonare_de
 def print_menu():
     print('1. CRUD Rezervare')
     print('2. Operatii')
+    print('i. Interfata noua(add,delete,show all)')
     print('a. Show all rezervare.')
     print('u. Undo')
     print('r. Redo')
     print('x. Iesire')
+
+
+def command_line_console(lista):
+    # citim instructiunile asa: delete,7;add,mara,economic,1234,da;showall
+    arr=input('Introduceti instructiunile (add,delete,showall) pe care doriti sa le utilizati separate din prin ; iar elementele prin ,\n')
+    intructiuni_lst=arr.split(';')
+    print('Au fost introduse {} comenzi\n'.format(len(intructiuni_lst)))
+    com=0
+    for instructiune in intructiuni_lst:
+        com+=1
+        arr=instructiune.split(',')
+        if arr[0]=='add':
+            if len(arr)!=6:
+                print("Comanda 'add' nu e valida! Trebuie sa contina numele instructiunii, id,nume,clasa,pret,checkin!")
+                break
+            else:
+                try:
+                    print("Rezultatul dupa comanda numarul {}\n".format(com))
+                    print(add(arr[1],arr[2],arr[3],float(arr[4]),arr[5],lista))
+                except ValueError as ve:
+                    print("Eroare: {}".format(ve))
+
+        elif arr[0]=='delete':
+            if len(arr)!=2:
+                print("Comanda 'delete' nu e valida! Trebuie sa contina numele instructiunii si id rezervarii pe care doriti sa o stergeti!\n")
+                break
+            else:
+                try:
+                    print("Rezultatul dupa comanda numarul {}\n".format(com))
+                    print(delete(arr[1],lista))
+                except ValueError as ve:
+                    print("Eroare: {}".format(ve))
+
+
+        elif arr[0]=='showall':
+            if len(arr)!=1:
+                print('Comanda showall trebuie sa dontina doar numele intructiunii!')
+                break
+            else:
+                print("Rezultatul dupa comanda numarul {}\n".format(com))
+                for rezervare in lista:
+                    print(toString(rezervare))
+        else:
+            print("Comanda nu e valida!")
+            break
+    return
+
+
 
 def run_console(lista):
 
@@ -22,6 +71,8 @@ def run_console(lista):
             run_crud_rezervare(lista)
         elif option == '2':
             run_options(lista)
+        elif option=='i':
+            command_line_console(lista)
         elif option == 'a':
             handle_show_all_rezervare(lista)
         elif option == 'u':

@@ -8,7 +8,7 @@ from Logic.options_service import upgrade_clasa, suma_pret_per_nume, ordonare_de
 def print_menu():
     print('1. CRUD Rezervare')
     print('2. Operatii')
-    print('i. Interfata noua(add,delete,show all)')
+    print('i. Interfata noua(add,delete,showall)')
     print('a. Show all rezervare.')
     print('u. Undo')
     print('r. Redo')
@@ -176,7 +176,7 @@ def handle_clasa_sup(lista,nume):
     ok = 0
     print('Schimbari:\n')
     for rezervare in lista:
-        rezultat=upgrade_clasa(rezervare,nume)
+        rezultat=upgrade_clasa(rezervare,nume,lista)
         if rezultat is not None:
             ok = +1
             print(rezultat)
@@ -186,7 +186,7 @@ def handle_clasa_sup(lista,nume):
 
 def handle_ieftinire(lista,procent):
     try:
-        handle_create_rezervare(aplicare_reducere(lista,procent))
+        handle_show_all_rezervare(aplicare_reducere(lista,procent))
     except ValueError as ve:
         print("Eroare: {}".format(ve))
 
@@ -196,7 +196,7 @@ def handle_pret_max_per_clasa(lista):
         print("Clasa {} are preturl maxim {}".format(clasa, rezultat[clasa]))
 
 def handle_ordonare_descresc_rezervari(lista):
-    handle_create_rezervare(ordonare_descrescator_dupa_pret(lista))
+    handle_show_all_rezervare(ordonare_descrescator_dupa_pret(lista))
 
 def handle_sume_pret_per_nume(lista):
     rezultat = suma_pret_per_nume(lista)

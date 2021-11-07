@@ -6,7 +6,7 @@ from Logic.CRUD import update
 
 
 
-def upgrade_clasa(rezervare,nume):
+def upgrade_clasa(rezervare,nume,lista):
     '''
     se cauta schimba clasa
     :param rezervare:
@@ -19,13 +19,13 @@ def upgrade_clasa(rezervare,nume):
         if str(lst[2]).find('economy plus') != -1:
             rezervare_new = creeazaRezervare(lst[0], lst[1], 'business', lst[3], lst[4])
             rezervare = deepcopy(rezervare_new)
-            update(getId(rezervare),getNume(rezervare),getClasa(rezervare),getPret(rezervare),getCheckin(rezervare))
+            update(getId(rezervare),getNume(rezervare),getClasa(rezervare),getPret(rezervare),getCheckin(rezervare),lista)
             return rezervare
 
         elif str(lst[2]).find('economy') != -1:
             rezervare_new=creeazaRezervare(lst[0],lst[1],'economy plus',lst[3],lst[4])
             rezervare=deepcopy(rezervare_new)
-            update(getId(rezervare), getNume(rezervare), getClasa(rezervare), getPret(rezervare), getCheckin(rezervare))
+            update(getId(rezervare), getNume(rezervare), getClasa(rezervare), getPret(rezervare), getCheckin(rezervare),lista)
             return rezervare
 
     return None
@@ -79,15 +79,15 @@ def aplicare_reducere(lista,procent):
     :param procent: procentul cu care se doreste ieftinirea
     :return: lista care contine modificarile facute
     '''
-    listaNoua=[]
+
     if procent<0:
         raise ValueError("Procentul trebuie sa fie mai mare decat 0!")
     for rezervare in lista:
         if getCheckin(rezervare) == "da":
-            reducere=getPret(rezervare)-((procent/100)*getPret(rezervare))
+            reducere=((100-procent)/100)*getPret(rezervare)
             rezervareNoua=creeazaRezervare(getId(rezervare),getNume(rezervare),getClasa(rezervare),reducere,
                                            getCheckin(rezervare))
-            listaNoua.append(rezervareNoua)
-        else:
-            listaNoua.append(rezervare)
-    return listaNoua
+            lista.remove(rezervare)
+            lista.append(rezervareNoua)
+    return lista
+

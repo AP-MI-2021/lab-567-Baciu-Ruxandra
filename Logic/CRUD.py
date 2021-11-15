@@ -12,7 +12,7 @@ def find_by_id(id,lista):
     return None
 
 
-def add( id, nume,clasa,pret,checkin,lista):
+def add( id, nume,clasa,pret,checkin,lista,undol,redol):
     '''
     se creaza o rezervare
     :param id_rezervare: unic
@@ -21,6 +21,8 @@ def add( id, nume,clasa,pret,checkin,lista):
     :param pret:float
     :param checkin:string
     :param lista: lista de rezervari
+    :param undol:
+    :param redol:
     :return:o lista continand atat elem vechi cat si cea nou adaugata
     '''
     ls=['economic', 'economic plus','business']
@@ -38,11 +40,15 @@ def add( id, nume,clasa,pret,checkin,lista):
         raise ValueError("Campul checkin-ul poate fi completat doar cu: 'da','nu'")
 
     rezervare = creeazaRezervare(id, nume, clasa, pret, checkin)
-    lista.append(rezervare)
-    return lista
+
+    undolist=deepcopy(lista)
+    undol.append(undolist)
+    redol.clear()
+
+    return lista+[rezervare]
 
 
-def delete(id,lista):
+def delete(id,lista,undol,redol):
     '''
     Sterge o rezervare dupa un id dat
     :param id:
@@ -53,17 +59,24 @@ def delete(id,lista):
     if find_by_id(id, lista) is None:
         raise ValueError("Nu exista o prajitura cu id-ul dat!")
 
-    for rezervare in lista:
-        if getId(rezervare) == id:
-            lista.remove(rezervare)
-    return lista
+    undolist = deepcopy(lista)
+    undol.append(undolist)
+    redol.clear()
 
-def update( id, nume, clasa, pret, checkin,lista):
+    new_ls=[]
+    for rezervare in lista:
+        if getId(rezervare) != id:
+            new_ls.append(rezervare)
+    return new_ls
+
+def update( id, nume, clasa, pret, checkin,lista,undol,redol):
     '''
     Schimba datele unui rezervare dat prin id
     '''
     if find_by_id(id, lista) is None:
         raise ValueError("Nu exista o rezervare cu id-ul dat!")
+
+    list=[]
 
     for rezervare in lista:
         if getId(rezervare) == id:
@@ -78,6 +91,13 @@ def update( id, nume, clasa, pret, checkin,lista):
                  checkin=getCheckin(rezervare)
 
             rezervareNoua = creeazaRezervare(id, nume, clasa, pret, checkin)
-            lista.remove(rezervare)
-            lista.append(rezervareNoua)
+            list.append(rezervareNoua)
+
+        else:
+            list.append(rezervare)
+
+    undolist = deepcopy(lista)
+    undol.append(undolist)
+    redol.clear()
+    lista=deepcopy(list)
     return lista

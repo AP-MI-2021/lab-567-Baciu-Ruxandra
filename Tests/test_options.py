@@ -30,10 +30,10 @@ def testOrdonare():
 
 def testMax():
     lista = []
-    lista = add('1', 'Carmen', 'economy', 1230, 'da', lista)
-    lista = add('2', 'Marius', 'economy plus', 250, 'nu', lista)
-    lista = add('3', 'Claudiu', 'business', 1023, 'da', lista)
-    lista = add('4', 'Claudiu', 'business', 1003, 'nu', lista)
+    lista = add('1', 'Carmen', 'economy', 1230, 'da', lista,[],[])
+    lista = add('2', 'Marius', 'economy plus', 250, 'nu', lista,[],[])
+    lista = add('3', 'Claudiu', 'business', 1023, 'da', lista,[],[])
+    lista = add('4', 'Claudiu', 'business', 1003, 'nu', lista,[],[])
 
     rezultat = pret_max_per_clasa(lista)
 
@@ -44,10 +44,10 @@ def testMax():
 
 def testSuma():
     lista = []
-    lista = add('1', 'Carmen', 'economy', 1230, 'da', lista)
-    lista = add('2', 'Marius', 'economy plus', 250, 'nu', lista)
-    lista = add('3', 'Claudiu', 'business', 1023, 'da', lista)
-    lista = add('4', 'Claudiu', 'business', 1003, 'nu', lista)
+    lista = add('1', 'Carmen', 'economy', 1230, 'da', lista,[],[])
+    lista = add('2', 'Marius', 'economy plus', 250, 'nu', lista,[],[])
+    lista = add('3', 'Claudiu', 'business', 1023, 'da', lista,[],[])
+    lista = add('4', 'Claudiu', 'business', 1003, 'nu', lista,[],[])
 
     rezultat = suma_pret_per_nume(lista)
 
@@ -59,12 +59,12 @@ def testSuma():
 
 def testReducere():
     lista = []
-    lista = add('1', 'Carmen', 'economy', 1230, 'da', lista)
-    lista = add('2', 'Marius', 'economy plus', 250, 'nu', lista)
-    lista = add('3', 'Claudiu', 'business', 1023, 'da', lista)
-    lista = add('4', 'Claudiu', 'business', 1003, 'nu', lista)
+    lista = add('1', 'Carmen', 'economy', 1230, 'da', lista,[],[])
+    lista = add('2', 'Marius', 'economy plus', 250, 'nu', lista,[],[])
+    lista = add('3', 'Claudiu', 'business', 1023, 'da', lista,[],[])
+    lista = add('4', 'Claudiu', 'business', 1003, 'nu', lista,[],[])
 
-    rezultat = aplicare_reducere(lista,10)
+    rezultat = aplicare_reducere(lista,10,[],[])
 
     rezervare_modif=find_by_id('1',rezultat)
 

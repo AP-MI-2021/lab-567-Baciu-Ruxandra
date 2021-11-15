@@ -4,7 +4,7 @@ from Logic.CRUD import add, find_by_id, delete, update
 
 def testAdd():
     ls=[]
-    ls=add('1', 'Carmen', 'economy', 123, 'da',ls)
+    ls=add('1', 'Carmen', 'economy', 123, 'da',ls,[],[])
 
     assert len(ls)==1
     assert getId(find_by_id("1",ls)) == '1'
@@ -15,15 +15,15 @@ def testAdd():
 
 def testDelete():
     ls = []
-    ls = add('1', 'Carmen', 'economy', 123, 'da', ls)
-    ls = add('2', 'Marius', 'economy plus', 250, 'nu', ls)
+    ls = add('1', 'Carmen', 'economy', 123, 'da', ls,[],[])
+    ls = add('2', 'Marius', 'economy plus', 250, 'nu', ls,[],[])
 
     assert len(ls) == 2
     assert find_by_id("3", ls) is None
     assert find_by_id("2", ls) is not None
 
     try:
-        ls = delete("3", ls)
+        ls = delete("3", ls,[],[])
         assert False
     except ValueError:
         assert len(ls) == 2
@@ -33,10 +33,10 @@ def testDelete():
 
 def testUpdate():
     ls = []
-    ls = add('1', 'Carmen', 'economy', 123, 'da', ls)
-    ls = add('2', 'Marius', 'economy plus', 250, 'nu', ls)
+    ls = add('1', 'Carmen', 'economy', 123, 'da', ls,[],[])
+    ls = add('2', 'Marius', 'economy plus', 250, 'nu', ls,[],[])
 
-    ls=update('2', '', '', 450, '', ls)
+    ls=update('2', '', '', 450, '', ls,[],[])
 
     rezervare_noua=find_by_id('1',ls)
 

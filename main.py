@@ -5,12 +5,15 @@ from UI.console import run_console
 
 def main():
     lista=[]
+    undol=[]
+    redol=[]
+    lista=add('1', 'Carmen', 'economy', 1230, 'da',lista,undol,redol)
+    lista=add('2', 'Marius', 'economy plus', 250, 'nu',lista,undol,redol)
+    lista=add('4', 'Marius', 'economy', 250, 'nu',lista,undol,redol)
+    lista=add('3', 'Claudiu', 'business', 1023, 'da',lista,undol,redol)
 
-    lista=add('1', 'Carmen', 'economy', 1230, 'da',lista)
-    lista=add('2', 'Marius', 'economy plus', 250, 'nu',lista)
-    lista=add('3', 'Claudiu', 'business', 1023, 'da',lista)
 
-    run_console(lista)
+    run_console(lista,undol,redol)
 
 run_all_tests()
 main()

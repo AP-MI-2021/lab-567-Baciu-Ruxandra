@@ -6,29 +6,34 @@ from Logic.CRUD import update
 
 
 
-def upgrade_clasa(rezervare,nume,lista):
+def upgrade_clasa(nume,lista,undol,redol):
     '''
     se cauta schimba clasa
     :param rezervare:
     :param nume:
     :return:
     '''
-    lst=[getId(rezervare),getNume(rezervare),getClasa(rezervare),getPret(rezervare),getCheckin(rezervare)]
 
-    if str(lst[1]).find(nume) != -1:
-        if str(lst[2]).find('economy plus') != -1:
-            rezervare_new = creeazaRezervare(lst[0], lst[1], 'business', lst[3], lst[4])
-            rezervare = deepcopy(rezervare_new)
-            update(getId(rezervare),getNume(rezervare),getClasa(rezervare),getPret(rezervare),getCheckin(rezervare),lista)
-            return rezervare
+    ls=[]
 
-        elif str(lst[2]).find('economy') != -1:
-            rezervare_new=creeazaRezervare(lst[0],lst[1],'economy plus',lst[3],lst[4])
-            rezervare=deepcopy(rezervare_new)
-            update(getId(rezervare), getNume(rezervare), getClasa(rezervare), getPret(rezervare), getCheckin(rezervare),lista)
-            return rezervare
+    for rezervare in lista:
+        if getNume(rezervare).find(nume)!=-1:
+            if getClasa(rezervare).find('economy plus')!=-1:
+                rezervare_new = creeazaRezervare(getId(rezervare),getNume(rezervare),'business',getPret(rezervare),getCheckin(rezervare))
+                ls.append(rezervare_new)
 
-    return None
+            elif getClasa(rezervare).find('economy')!=-1:
+                rezervare_new = creeazaRezervare(getId(rezervare), getNume(rezervare), 'economy plus', getPret(rezervare),
+                                                 getCheckin(rezervare))
+                ls.append(rezervare_new)
+        else:
+            ls.append(rezervare)
+
+    undolist = deepcopy(lista)
+    undol.append(undolist)
+    redol.clear()
+
+    return ls
 
 def ordonare_descrescator_dupa_pret(lista):
     '''
@@ -72,22 +77,29 @@ def suma_pret_per_nume(lista):
             rezultat[nume] = pret
     return rezultat
 
-def aplicare_reducere(lista,procent):
+def aplicare_reducere(lista,procent,undol,redol):
     '''
     ieftineste toate rezervarile la care s-a facut checkin-ul cu un procent dat
     :param lista: lista cu rezervari
     :param procent: procentul cu care se doreste ieftinirea
     :return: lista care contine modificarile facute
     '''
-
+    ls=[]
     if procent<0:
         raise ValueError("Procentul trebuie sa fie mai mare decat 0!")
     for rezervare in lista:
-        if getCheckin(rezervare) == "da":
+        if getCheckin(rezervare) =="da":
             reducere=((100-procent)/100)*getPret(rezervare)
             rezervareNoua=creeazaRezervare(getId(rezervare),getNume(rezervare),getClasa(rezervare),reducere,
                                            getCheckin(rezervare))
-            lista.remove(rezervare)
-            lista.append(rezervareNoua)
-    return lista
+
+            ls.append(rezervareNoua)
+        else:
+            ls.append(rezervare)
+
+    undolist = deepcopy(lista)
+    undol.append(undolist)
+    redol.clear()
+
+    return ls
 

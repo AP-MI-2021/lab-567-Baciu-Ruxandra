@@ -9,8 +9,8 @@ def main():
     redol=[]
     lista=add('1', 'Carmen', 'economy', 1230, 'da',lista,undol,redol)
     lista=add('2', 'Marius', 'economy plus', 250, 'nu',lista,undol,redol)
-    lista=add('4', 'Marius', 'economy', 250, 'nu',lista,undol,redol)
-    lista=add('3', 'Claudiu', 'business', 1023, 'da',lista,undol,redol)
+    lista=add('3', 'Marius', 'economy', 250, 'nu',lista,undol,redol)
+    lista=add('4', 'Claudiu', 'business', 1023, 'da',lista,undol,redol)
 
 
     run_console(lista,undol,redol)
